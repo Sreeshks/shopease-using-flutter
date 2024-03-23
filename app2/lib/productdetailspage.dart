@@ -1,7 +1,6 @@
 // Inside the build method of SearchResultsList widget
 import 'package:flutter/material.dart';
-import 'package:app2/main.dart';
-
+import 'package:app2/serachresultpage.dart';
 // New screen or dialog to display product details
 class ProductDetailsPage extends StatelessWidget {
   final SearchResult product;

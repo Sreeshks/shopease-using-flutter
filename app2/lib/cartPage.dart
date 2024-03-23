@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app2/main.dart';
+import 'package:app2/serachresultpage.dart';
 
 class CartPage extends StatelessWidget {
   final List<SearchResult> cartItems;

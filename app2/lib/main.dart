@@ -1,12 +1,13 @@
-
 import 'package:flutter/material.dart';
-import 'package:app2/productdetailspage.dart';
+import 'package:app2/Shoeimage.dart';
 import 'package:app2/cartPage.dart';
+import 'package:app2/Userprofile.dart';
+import 'package:app2/ProductSerachDelegate.dart';
+import 'package:app2/serachresultpage.dart';
 
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   int likesCount = 0;
@@ -57,118 +59,162 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       animation: _animation,
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.yellow,
-            title: Row(
-              children: [
-                // Shopping cart icon with item count
-                Stack(
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 200.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Image.network(
+                    'https://th.bing.com/th/id/OIP.RCRS68NxoU-fPSRPhi2SKAHaDf?w=1920&h=904&rs=1&pid=ImgDetMain',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                title: Row(
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.shopping_cart),
-                      onPressed: () {
-                        // Open cart page or show cart items
-                        _openCartPage(context);
-                      },
+                    // Shopping cart icon with item count
+                    Stack(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.shopping_cart),
+                          onPressed: () {
+                            // Open cart page or show cart items
+                            _openCartPage(context);
+                          },
+                        ),
+                        // Display count of items in the cart
+                        cartItems.isNotEmpty
+                            ? Positioned(
+                                right: 0,
+                                child: CircleAvatar(
+                                  backgroundColor: const Color.fromARGB(255, 234, 234, 234),
+                                  radius: 10,
+                                  child: Text(
+                                    '${cartItems.length}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
-                    // Display count of items in the cart
-                    cartItems.isNotEmpty
-                        ? Positioned(
-                            right: 0,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.red,
-                              radius: 10,
-                              child: Text(
-                                '${cartItems.length}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : SizedBox.shrink(),
+                    SizedBox(width: 8.0),
+                    FadeTransition(
+                      opacity: _animation,
+                      child: Text('Shopease'),
+                    ),
                   ],
                 ),
-                SizedBox(width: 8.0),
-                FadeTransition(
-                  opacity: _animation,
-                  child: Text('Shopease'),
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: ProductSearchDelegate(),
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.person),
-                onPressed: () {
-                  // Navigate to profile page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserProfilePage()),
-                  );
-                },
-              ),
-            ],
-          ),
-          body: Container(
-            // Use Container to set background color
-            color: Colors.black,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'New Arrivals',
-                      style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
+                backgroundColor: Colors.transparent, // Set app bar background color to transparent
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: ProductSearchDelegate(),
+                      );
+                    },
                   ),
-                  SizedBox(height: 8.0),
-                  ShoeImage(
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    name: 'Nike Air Force',
-                    price: 90.0,
-                    onLikePressed: () {
-                      setState(() {
-                        likesCount++;
-                      });
+                  IconButton(
+                    icon: Icon(Icons.person),
+                    onPressed: () {
+                      // Navigate to profile page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UserProfilePage()),
+                      );
                     },
-                    onCommentPressed: () {
-                      _showCommentDialog(context);
-                    },
-                    comments: comments,
                   ),
-                  SizedBox(height: 8.0),
-                  ShoeImage(
-                    imageUrl:
-                        'https://th.bing.com/th/id/OIP.gGNGx_B8rwwfboUhq1O_ZwHaC-?rs=1&pid=ImgDetMain',
-                    name: 'REEBOK ',
-                    price: 90.0,
-                    onLikePressed: () {
-                      setState(() {
-                        likesCount++;
-                      });
-                    },
-                    onCommentPressed: () {
-                      _showCommentDialog(context);
-                    },
-                    comments: comments,
-                  ),
-                  // Add more shoe images as needed
                 ],
               ),
-            ),
+              SliverToBoxAdapter(
+                child: Container(
+                  color: Color.fromARGB(255, 255, 25, 0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'New Arrivals',
+                            style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        ShoeImage(
+                          imageUrl:
+                              'https://cdn.zouton.com/images/originals/stores/Converseimage03_1604117037.png',
+                          name: 'CONVERSE ',
+                          price: 1800.0,
+                          onLikePressed: () {
+                            setState(() {
+                              likesCount++;
+                            });
+                          },
+                          onCommentPressed: () {
+                            _showCommentDialog(context);
+                          },
+                          comments: comments,
+                        ),
+                        SizedBox(height: 8.0),
+                        ShoeImage(
+                          imageUrl:
+                              'https://cdn.zouton.com/images/originals/blog/BANNER31_1604740200.png',
+                          name: 'ADIDAS ',
+                          price: 3400.0,
+                          onLikePressed: () {
+                            setState(() {
+                              likesCount++;
+                            });
+                          },
+                          onCommentPressed: () {
+                            _showCommentDialog(context);
+                          },
+                          comments: comments,
+                        ),
+                        SizedBox(height: 8.0),
+                        ShoeImage(
+                          imageUrl:
+                              'https://th.bing.com/th/id/OIP.BSU0t0J4vjOn2odb1GsNFQHaFj?rs=1&pid=ImgDetMain',
+                          name: 'Nike Air Force',
+                          price: 1190.0,
+                          onLikePressed: () {
+                            setState(() {
+                              likesCount++;
+                            });
+                          },
+                          onCommentPressed: () {
+                            _showCommentDialog(context);
+                          },
+                          comments: comments,
+                        ),
+                        SizedBox(height: 8.0),
+                        ShoeImage(
+                          imageUrl:
+                              'https://th.bing.com/th/id/OIP.gGNGx_B8rwwfboUhq1O_ZwHaC-?rs=1&pid=ImgDetMain',
+                          name: 'REEBOK ',
+                          price: 2000.0,
+                          onLikePressed: () {
+                            setState(() {
+                              likesCount++;
+                            });
+                          },
+                          onCommentPressed: () {
+                            _showCommentDialog(context);
+                          },
+                          comments: comments,
+                        ),
+                        // Add more shoe images as needed
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -190,294 +236,44 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     showDialog(
       context: context,
       builder: (BuildContext context) {
-  
         return AlertDialog(
-          title: Text("Add a Comment"),
-          content: TextField(
-            controller: commentController,
-            decoration: InputDecoration(hintText: "Enter your comment"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text("Cancel"),
+                    title: Text("Add a Comment"),
+            content: TextField(
+              controller: commentController,
+              decoration: InputDecoration(hintText: "Enter your comment"),
             ),
-            TextButton(
-              onPressed: () {
-                String comment = commentController.text;
-                if (comment.isNotEmpty) {
-                  setState(() {
-                    comments.add(comment);
-                  });
-                  commentController.clear();
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter a comment.'),
-                    ),
-                  );
-                }
-              },
-              child: Text("Post"),
-            ),
-          ],
-        );
-              
-      },
-    );
-
-  }
-}
-
-class UserProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('User Profile'),
-        backgroundColor: Colors.yellow,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Contact Information:',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Email: sreeshksureshh@gmail.com',
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Phone: 8129690147',
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Implement login functionality
-                  },
-                  child: Text('Login'),
-                ),
-                SizedBox(width: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Implement signup functionality
-                  },
-                  child: Text('Sign Up'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [IconButton(icon: Icon(Icons.clear), onPressed: () => query = '')];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // Implement search results view
-    return SearchResultsList(query: query);
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // Implement search suggestions view
-    return Center(
-      child: Text('Search Suggestions for: $query'),
-    );
-  }
-}
-
-class SearchResultsList extends StatelessWidget {
-  final String query;
-
-  SearchResultsList({required this.query});
-
-  @override
-  Widget build(BuildContext context) {
-    // Placeholder data for search results
-    List<SearchResult> searchResults = [
-      SearchResult(
-        name: 'Nike Air Force',
-        location: 'Thrissur',
-        size: 100,
-        stock: 40,
-        shopName: 'Sports Emporium',
-        price: 90.0,
-        imageUrl:
-            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      ),
-      SearchResult(
-        name: 'Nike Air Max',
-        location: 'vakkunathann',
-        size: 9,
-        stock: 30,
-        shopName: 'Sneaker Outlet',
-        price: 110.0,
-        imageUrl:
-            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      ),
-    ];
-
-    // Filter search results based on query
-    List<SearchResult> filteredResults = searchResults
-            .where(
-            (result) => result.name.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-
-    return ListView.builder(
-      itemCount: filteredResults.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            // Navigate to product details screen or dialog
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetailsPage(product: filteredResults[index]),
+                },
+                child: Text("Cancel"),
               ),
-            );
-          },
-          child: ShoeImage(
-            imageUrl: filteredResults[index].imageUrl,
-            name: filteredResults[index].name,
-            price: filteredResults[index].price,
-            comments: [],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ShoeImage extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final double price;
-  final Function()? onLikePressed;
-  final Function()? onCommentPressed;
-  final List<String> comments;
-
-  ShoeImage({
-    required this.imageUrl,
-    required this.name,
-    required this.price,
-    this.onLikePressed,
-    this.onCommentPressed,
-    required this.comments,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            imageUrl,
-            height: 150.0,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            name,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            '\$$price',
-            style: TextStyle(fontSize: 16.0, color: Colors.grey),
-          ),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.favorite),
-                onPressed: onLikePressed,
-              ),
-              IconButton(
-                icon: Icon(Icons.comment),
-                onPressed: onCommentPressed,
+              TextButton(
+                onPressed: () {
+                  String comment = commentController.text;
+                  if (comment.isNotEmpty) {
+                    setState(() {
+                      comments.add(comment);
+                    });
+                    commentController.clear();
+                    Navigator.of(context).pop(); // Close the dialog
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please enter a comment.'),
+                      ),
+                    );
+                  }
+                },
+                child: Text("Post"),
               ),
             ],
-          ),
-          SizedBox(height: 8.0),
-          if (comments.isNotEmpty)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Comments:',
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: comments.map((comment) => Text(comment)).toList(),
-                ),
-              ],
-            ),
-        ],
-      ),
-    );
+          );
+        },
+      );
+    }
   }
-}
 
-class SearchResult {
-  final String name;
-  final String location;
-  final int size;
-  final int stock;
-  final String shopName;
-  final double price;
-  final String imageUrl;
 
-  SearchResult({
-    required this.name,
-    required this.location,
-    required this.size,
-    required this.stock,
-    required this.shopName,
-    required this.price,
-    required this.imageUrl,
-  });
-}
-
+         

@@ -14,7 +14,7 @@ class UserProfilePage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text('User Profile'),
-          backgroundColor: Colors.yellow,
+          
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

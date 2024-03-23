@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage>
                     fit: BoxFit.cover,
                   ),
                 ),
+                
                 title: Row(
                   children: [
                     // Shopping cart icon with item count
@@ -115,6 +116,7 @@ class _HomePageState extends State<HomePage>
                       );
                     },
                   ),
+                  
                   IconButton(
                     icon: Icon(Icons.person),
                     onPressed: () {
@@ -129,7 +131,7 @@ class _HomePageState extends State<HomePage>
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  color: Color.fromARGB(255, 255, 25, 0),
+                  color: Color.fromARGB(255, 231, 231, 231),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +143,7 @@ class _HomePageState extends State<HomePage>
                             style: TextStyle(
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                                color: const Color.fromARGB(255, 0, 0, 0)),
                           ),
                         ),
                         SizedBox(height: 8.0),

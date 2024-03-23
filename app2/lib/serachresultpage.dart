@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:app2/productdetailspage.dart';
 import 'package:app2/Shoeimage.dart';
+
 class SearchResultsList extends StatelessWidget {
   final String query;
 
@@ -32,10 +33,18 @@ class SearchResultsList extends StatelessWidget {
             'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       ),
     ];
-
+    Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(
+              'https://1.bp.blogspot.com/-3JUBo6Gwta4/XR5G-0ochnI/AAAAAAAAAMs/NnZWq5HVk6YRrengexZv3zt2w3ncQ9dGQCLcBGAs/s1600/GPS.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
     // Filter search results based on query
     List<SearchResult> filteredResults = searchResults
-            .where(
+        .where(
             (result) => result.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
@@ -65,7 +74,6 @@ class SearchResultsList extends StatelessWidget {
   }
 }
 
-
 class SearchResult {
   final String name;
   final String location;
@@ -85,4 +93,3 @@ class SearchResult {
     required this.imageUrl,
   });
 }
-

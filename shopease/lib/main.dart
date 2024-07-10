@@ -1,4 +1,4 @@
-
+#Welcome to shopease 
 import 'package:flutter/material.dart';
 
 import 'package:shopease/splash.dart';

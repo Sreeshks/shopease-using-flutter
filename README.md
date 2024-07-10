@@ -1,5 +1,4 @@
 
-
 # Shopease Flutter App
 
 Shopease is a unique Flutter application designed to enhance the shopping experience by connecting users directly with physical shops. This app offers seamless product search functionality, real-time stock information, and convenient shop locator features.
